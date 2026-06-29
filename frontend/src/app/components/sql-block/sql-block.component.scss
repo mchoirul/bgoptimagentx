@@ -1,0 +1,234 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.workspace-blocks {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding-right: 0.25rem;
+
+  /* Custom Scrollbar for Workspace Blocks */
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: #1e293b;
+    border-radius: 10px;
+  }
+  &::-webkit-scrollbar-thumb:hover {
+    background: #334155;
+  }
+}
+
+.sql-container {
+  display: flex;
+  flex-direction: column;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #111827;
+  border: 1px solid #1f2937;
+  flex: 1 0 auto;
+  min-height: 250px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    border-color: #38bdf8;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+  }
+}
+
+.toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  background: #0f172a;
+  border-bottom: 1px solid #1f2937;
+  
+  .lang { 
+    font-size: 0.8rem; 
+    color: #94a3b8; 
+    font-weight: bold; 
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .actions {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+  }
+  
+  .copy-btn {
+    background: transparent;
+    border: 1px solid #334155;
+    color: #e2e8f0;
+    padding: 0.25rem 0.6rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    transition: all 0.15s ease;
+    
+    &:hover { 
+      background: #334155; 
+      border-color: #475569;
+      color: white;
+    }
+  }
+
+  .dry-run-btn {
+    background: transparent;
+    border: 1px solid #0369a1;
+    color: #38bdf8;
+    padding: 0.25rem 0.6rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    transition: all 0.15s ease;
+    
+    &:hover:not(:disabled) {
+      background: rgba(56, 189, 248, 0.1);
+      border-color: #38bdf8;
+      color: white;
+    }
+    
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      border-color: #1e293b;
+      color: #64748b;
+    }
+  }
+}
+
+.dry-run-result-panel {
+  padding: 0.75rem 1rem;
+  background: #090d16;
+  border-top: 1px solid #1f2937;
+}
+
+.dry-run-success {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  .metrics-row {
+    display: flex;
+    gap: 1.5rem;
+    font-size: 0.9rem;
+    color: #94a3b8;
+
+    .metric {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+
+      i {
+        color: #38bdf8;
+      }
+
+      strong {
+        color: #f1f5f9;
+      }
+    }
+  }
+
+  .metrics-status {
+    font-size: 0.8rem;
+    color: #34d399;
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+  }
+}
+
+.dry-run-failure {
+  color: #fca5a5;
+  font-size: 0.85rem;
+
+  .error-msg {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+
+    pre {
+      margin: 0.5rem 0 0 0;
+      padding: 0.5rem;
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.2);
+      border-radius: 4px;
+      font-family: monospace;
+      white-space: pre-wrap;
+      color: #f87171;
+      overflow-x: auto;
+    }
+  }
+}
+
+.dry-run-unavailable {
+  color: #fcd34d;
+  font-size: 0.85rem;
+
+  .warn-msg {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+
+    pre {
+      margin: 0.5rem 0;
+      padding: 0.6rem;
+      background: rgba(245, 158, 11, 0.08);
+      border: 1px solid rgba(245, 158, 11, 0.2);
+      border-radius: 4px;
+      font-family: monospace;
+      white-space: pre-wrap;
+      color: #fbbf24;
+      overflow-x: auto;
+    }
+
+    .hint {
+      margin: 0.25rem 0 0 0;
+      font-size: 0.8rem;
+      color: #94a3b8;
+      font-style: italic;
+    }
+  }
+}
+
+.editor-content {
+  flex: 1;
+  overflow: auto;
+  padding: 1rem;
+  background: #0f172a;
+  
+  ::ng-deep pre { margin: 0; background: transparent !important; padding: 0; }
+  ::ng-deep code { font-family: 'Consolas', 'Monaco', monospace; color: #e2e8f0; font-size: 0.9rem; }
+}
+
+.error-panel {
+  background: rgba(127, 29, 29, 0.4);
+  color: #fca5a5;
+  padding: 1rem;
+  border: 1px solid #991b1b;
+  border-radius: 8px;
+  font-family: monospace;
+  white-space: pre-wrap;
+  font-size: 0.9rem;
+  margin-top: 1rem;
+}
