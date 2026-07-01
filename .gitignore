@@ -207,3 +207,12 @@ my_env.tfvars
 
 # A2A Inspector
 tools/a2a-inspector/
+
+# GCP / Secrets / Private Keys / Credentials / Local Stores
+*credentials*.json
+*key*.json
+*.key
+*.pem
+*.p12
+.gcp/
+secrets/

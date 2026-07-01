@@ -155,7 +155,11 @@ async def read_uploaded_sql(file_name: str, tool_context: ToolContext) -> dict:
 
 def _dry_run_sync(sql_query: str) -> dict:
     client = _get_bq_client()
+    # Strictly enforce dry_run=True. It cannot be disabled.
     job_config = bigquery.QueryJobConfig(dry_run=True, use_query_cache=False)
+    # Double-check configuration as defense-in-depth assertion
+    if not job_config.dry_run:
+        raise RuntimeError("CRITICAL: Dry-run configuration was bypassed.")
     query_job = client.query(sql_query, job_config=job_config)
     bytes_scanned = query_job.total_bytes_scanned
     return {

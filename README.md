@@ -97,6 +97,22 @@ GOOGLE_CLOUD_LOCATION="us"
 
 ---
 
+## 🔒 Security & Least Privilege
+
+This application is designed strictly for query optimization, syntax validation, and dry-running. It **never** executes SQL queries or mutates any data. 
+
+> [!IMPORTANT]
+> **Recommended Least-Privilege GCP Setup**
+> For maximum defense-in-depth security, configure the GCP Service Account with only these two roles:
+> 1. **`BigQuery Job User`** (`roles/bigquery.jobUser`): Permits submitting query/dry-run jobs at the project level.
+> 2. **`BigQuery Data Viewer`** (`roles/bigquery.dataViewer`): Permits reading metadata/schemas of the tables to dry-run.
+>
+> By leaving out write/edit roles (like `BigQuery Data Editor`), **GCP IAM will physically block any attempts to run actual DML/DDL modifications (e.g., `DELETE`, `UPDATE`, `CREATE TABLE` for real)**, even if the application's software dry-run guardrails are somehow bypassed.
+
+For a detailed security overview, step-by-step setup commands, and a complete threat modeling analysis, see [SECURITY.md](SECURITY.md).
+
+---
+
 ## 🎮 Running the Application
 
 This project provides multiple ways to interact with the tuning agent, ranging from a premium custom web studio to a headless API.
@@ -129,20 +145,18 @@ This exposes the standard ADK endpoints at `http://localhost:8000` (e.g., `/run_
 
 ---
 
-## 🛡️ Implementation & Hardening Status
-
-This project has been audited and hardened against production architectural, performance, and security issues. 
+## 🛡️ Implementation Logs
 
 ### Completed Hardening & UX Upgrades:
-- **ADK Context Caching**: Fully optimized using ADK's `static_instruction` rather than generic `instruction`, enabling global cross-session caching for maximum performance and minimum token costs.
-- **SQLite Session Persistence**: Session history is stored locally in a persistent SQLite database (`sessions.db`) instead of ephemeral in-memory storage, meaning histories survive server restarts.
-- **Prompt Isolation & Guardrails**: System instructions are decoupled from dynamic code, with rigid prompt injection filters and security guardrails compiled directly inside `app/agent.py`.
-- **CORS & XSS Security**: Implemented default-deny CORS fallbacks on the FastAPI server and strict Angular HTML sanitization (`SecurityContext.HTML`) in the frontend.
-- **Performance Optimizations**: Added stream buffering/throttling to eliminate O(n²) string concatenation overhead, and `WeakMap` memoization to eliminate redundant SQL regex re-evaluations during stream.
-- **Premium UX Polish**:
-  - **Structured SQL Comparison**: Workspace always displays both slots—the Optimized SQL on top, and the Original SQL below—with proper fallback states.
-  - **Inline Confirmations**: Replaced native browser `confirm()` with non-obtrusive inline confirmations.
-  - **Toast Notifications**: Added real-time glassmorphic error/success snackbars.
-  - **Onboarding Experience**: Welcomes first-time users with clean instructions instead of empty screens.
-  - **Shortcut Keys**: Added `Ctrl+K` for new sessions, proper `Shift+Enter` multi-line handling, and `ArrowUp` to recall the last prompt.
+- **[2026-06-28] ADK Context Caching**: Fully optimized using ADK's `static_instruction` rather than generic `instruction`, enabling global cross-session caching for maximum performance and minimum token costs.
+- **[2026-06-28] SQLite Session Persistence**: Session history is stored locally in a persistent SQLite database (`sessions.db`) instead of ephemeral in-memory storage, meaning histories survive server restarts.
+- **[2026-06-27] Prompt Isolation & Guardrails**: System instructions are decoupled from dynamic code, with rigid prompt injection filters and security guardrails compiled directly inside `app/agent.py`.
+- **[2026-06-30] CORS & XSS Security**: Implemented default-deny CORS fallbacks on the FastAPI server and strict Angular HTML sanitization (`SecurityContext.HTML`) in the frontend.
+- **[2026-06-30] Performance Optimizations**: Added stream buffering/throttling to eliminate O(n²) string concatenation overhead, and `WeakMap` memoization to eliminate redundant SQL regex re-evaluations during stream.
+- **[2026-06-27] UX Enhancements**:
+  - **[2026-06-27] Structured SQL Comparison**: Workspace always displays both slots—the Optimized SQL on top, and the Original SQL below—with proper fallback states.
+  - **[2026-06-27] Inline Confirmations**: Replaced native browser `confirm()` with non-obtrusive inline confirmations.
+  - **[2026-06-27] Toast Notifications**: Added real-time glassmorphic error/success snackbars.
+  - **[2026-06-27] Onboarding Experience**: Welcomes first-time users with clean instructions instead of empty screens.
+  - **[2026-06-27] Shortcut Keys**: Added `Ctrl+K` for new sessions, proper `Shift+Enter` multi-line handling, and `ArrowUp` to recall the last prompt.
 
